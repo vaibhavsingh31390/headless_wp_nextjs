@@ -1,0 +1,28 @@
+.wp-card {
+  @apply flex flex-col border-2 border-[var(--foreground)] overflow-hidden rounded-lg;
+}
+
+.wp-card-image-frame {
+  @apply w-full h-60 overflow-hidden;
+}
+
+.wp-card-image {
+  @apply w-full h-60 bg-cover bg-center transition-all duration-300 scale-100 hover:scale-110;
+}
+
+.wp-card-content {
+  @apply p-4 flex-grow;
+}
+
+.wp-card-h3 {
+  @apply text-lg md:text-2xl font-bold text-[var(--foreground)] leading-snug m-0 mb-4;
+}
+
+.wp-card-text,
+.wp-card-text p {
+  @apply text-[var(--foreground)] text-base mb-0;
+}
+
+.read-more-button {
+  @apply text-gray-300 cursor-pointer mt-2;
+}
