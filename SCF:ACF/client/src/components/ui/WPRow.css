@@ -1,0 +1,15 @@
+.wp-row {
+  @apply flex flex-wrap md:flex-nowrap justify-between items-stretch px-4;
+}
+
+.wp-row-fluid {
+  @apply px-0;
+}
+
+.wp-row-padding {
+  @apply py-8 md:py-16;
+}
+
+.wp-row-full-height {
+  @apply min-h-svh items-center;
+}
