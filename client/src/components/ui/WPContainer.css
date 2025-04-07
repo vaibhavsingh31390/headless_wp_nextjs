@@ -1,8 +1,0 @@
-.wp-container {
-  @apply container mx-auto px-2 sm:px-4 md:px-4 lg:px-4
-         max-w-full;
-}
-
-.wp-container-fluid {
-  @apply max-w-full px-0;
-}
