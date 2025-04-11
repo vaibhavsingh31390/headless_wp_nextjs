@@ -1,9 +1,11 @@
 function Column({
   children,
   width,
+  className,
 }: {
   children: React.ReactNode;
   width?: string;
+  className?: string;
 }) {
   const widthStyle = width
     ? {
@@ -15,7 +17,7 @@ function Column({
         flexBasis: 0,
       };
   return (
-    <div style={widthStyle} className="px-2">
+    <div style={widthStyle} className={`px-2 ${className}`}>
       {children}
     </div>
   );

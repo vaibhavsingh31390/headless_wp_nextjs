@@ -1,5 +1,5 @@
 export const theme = {
-  base: "#FFFFFF",
+  base: "#FFF",
   contrast: "#111111",
   "accent-1": "#FFEE58",
   "accent-2": "#F6CFF4",

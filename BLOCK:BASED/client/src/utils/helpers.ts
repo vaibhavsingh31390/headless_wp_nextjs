@@ -1,6 +1,5 @@
 import { v4 as uuid } from "uuid";
 import { Block, FormatMenu, MainMenu } from "./types";
-import { theme } from "@/styles/styles";
 
 export const processJsonForBlocks = (blocksJson: any): Block[] => {
   const blocks = JSON.parse(JSON.stringify(blocksJson));
@@ -43,11 +42,18 @@ export const getTextAlignClass = (textAlign?: string): string => {
 };
 
 export const getTextColorClass = (color: string = "base"): string => {
-  const colorValue = theme[color as keyof typeof theme] || "#fff";
-  if (!colorValue.startsWith("#") || colorValue.includes(" ")) {
-    return "";
-  }
-  return `text-[${colorValue}]`;
+  const colorValue: Record<string, string> = {
+    base: "white",
+    contrast: "text-gray-900",
+    "accent-1": "text-yellow-300",
+    "accent-2": "text-pink-200",
+    "accent-3": "text-indigo-700",
+    "accent-4": "text-gray-500",
+    "accent-5": "text-amber-50",
+    "accent-6": "text-opacity-20",
+    slate: "text-slate-800",
+  };
+  return `text-${colorValue[color]}` || "text-white";
 };
 
 export const getRelativePath = (url: string = ""): string => {
@@ -74,6 +80,12 @@ export const allPagesSlug = (): string => {
       uri
     }
   }
+  properties {
+    nodes {
+      uri
+      title
+    }
+  }
 }`;
 };
 
@@ -81,6 +93,13 @@ export const pageQuery = (): string => {
   return `query PageDataQuery($url: String!) {
     nodeByUri(uri: $url) {
       ... on Page {
+        title
+        blocks(postTemplate: false)
+        container {
+          container
+        }
+      }
+      ... on Property {
         title
         blocks(postTemplate: false)
         container {
@@ -138,4 +157,48 @@ export const mainMenuQuery = (): string => {
       }
     }
   }`;
+};
+
+export const propertySearchQuery = (
+  offset: number = 0,
+  size: number = 3
+): string => {
+  return `query filteredProperties {
+    properties(where: {offsetPagination: {offset: ${offset}, size: ${size}}}) {
+      nodes {
+        databaseId
+        title
+        uri
+        propertyFeatures {
+          bathRooms
+          bedRooms
+          fieldGroupName
+          hasParking
+          petFriendly
+          price
+        }
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+            uri
+          }
+        }
+      }
+      pageInfo {
+        offsetPagination {
+          total
+          hasMore
+          hasPrevious
+        }
+      }
+    }
+  }`;
+};
+
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+export const setCursorClass = (condition: boolean) => {
+  return condition ? "cursor-not-allowed" : "cursor-pointer";
 };

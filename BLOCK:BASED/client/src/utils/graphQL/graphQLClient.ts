@@ -4,19 +4,9 @@ const createApolloClient = () => {
   const isDev = process.env.APP_ENV === "dev";
   return new ApolloClient({
     uri: process.env.WP_GRAPHQ_URL || "http://courseheadless.local/graphql",
-    cache: isDev
-      ? new InMemoryCache({
-          resultCaching: false,
-        })
-      : new InMemoryCache(),
-    defaultOptions: {
-      watchQuery: {
-        fetchPolicy: isDev ? "no-cache" : "cache-first",
-      },
-      query: {
-        fetchPolicy: isDev ? "no-cache" : "cache-first",
-      },
-    },
+    cache: new InMemoryCache({
+      resultCaching: false,
+    }),
   });
 };
 
@@ -45,3 +35,16 @@ const requestGraphQl = async <T>(
 };
 
 export default requestGraphQl;
+
+// cache: isDev
+// ? new InMemoryCache({
+//     resultCaching: false,
+//   })
+// : new InMemoryCache(),
+// defaultOptions: {
+// watchQuery: {
+//   fetchPolicy: isDev ? "no-cache" : "cache-first",
+// },
+// query: {
+//   fetchPolicy: isDev ? "no-cache" : "cache-first",
+// },

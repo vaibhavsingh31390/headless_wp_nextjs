@@ -8,13 +8,9 @@ function Columns({
   children: React.ReactNode;
 }) {
   return (
-    <Container defaultPadding>
-      <div
-        className={`mx-auto ${isStackedOnMobile ? "block md:flex" : "flex"}`}
-      >
-        {children}
-      </div>
-    </Container>
+    <div className={`mx-auto ${isStackedOnMobile ? "block md:flex" : "flex"}`}>
+      {children}
+    </div>
   );
 }
 

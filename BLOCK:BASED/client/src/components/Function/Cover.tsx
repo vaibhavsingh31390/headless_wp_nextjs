@@ -1,6 +1,7 @@
 import { attrs } from "@/utils/types";
 import Image from "next/image";
 import Container from "./Container";
+import Column from "./Column";
 
 function Cover({ data, children }: { data: attrs; children: React.ReactNode }) {
   return (
@@ -11,10 +12,13 @@ function Cover({ data, children }: { data: attrs; children: React.ReactNode }) {
           src={data.url}
           fill
           className="mix-blend-soft-light object-cover"
+          priority
         ></Image>
       )}
       <Container>
-        <div className="z-10">{children}</div>
+        <Column width="100%" className="z-10">
+          {children}
+        </Column>
       </Container>
     </div>
   );

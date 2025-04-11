@@ -34,7 +34,7 @@
 }
 
 .button-with-transition-2 {
-  @apply bg-[var(--theme-color)] text-white  hover:text-[var(--theme-text)] hover:bg-[var(--color-foreground)] transition-all duration-300;
+  @apply bg-[var(--theme-color)] text-white opacity-90 shadow hover:opacity-100 transition-opacity duration-300 hover:shadow-md;
 }
 
 a {
@@ -45,4 +45,60 @@ body {
   background: var(--foreground);
   color: var(--background);
   font-family: var(--font-body), sans-serif;
+}
+
+.property-card {
+  @apply p-3 bg-slate-300 opacity-95 hover:opacity-100 border-[var(--theme-color)] border-1 rounded-md min-h-[200px] h-full shadow-md transition-all  duration-300;
+}
+
+.property-card-image {
+  @apply relative w-full h-[200px] min-h-[200px] rounded-md overflow-hidden;
+}
+
+.property-card-image img {
+  @apply object-cover group-hover:scale-105 transition-all duration-300;
+}
+
+.property-card-title {
+  @apply mt-3 text-lg font-bold;
+}
+
+.property-card-price {
+  @apply mt-3 font-bold text-[var(--theme-text)];
+}
+
+.property-card-meta {
+  @apply grid grid-cols-2 gap-4 mt-3;
+}
+
+.property-card-meta > * {
+  @apply flex justify-start items-center gap-2;
+}
+
+.pagination-button {
+  @apply h-10 w-10 rounded-md flex justify-center items-center text-xl bg-[var(--theme-color)] text-white opacity-90 hover:opacity-100 transition-opacity duration-300 cursor-pointer;
+}
+
+.pagination-button.disabled {
+  @apply h-10 w-10 rounded-md bg-[var(--theme-color)]/20 cursor-not-allowed;
+}
+
+.property-filter-form {
+  @apply shadow-md bg-slate-300 min-h-[100px] rounded-md border-[var(--theme-color)] border-0 p-8 flex justify-between items-center gap-10;
+}
+
+.property-filter-input {
+  @apply flex justify-start items-center gap-3 mb-3 font-bold;
+}
+
+.property-filter-input-text {
+  @apply flex justify-center items-start flex-col gap-1 font-bold;
+}
+
+.property-filter-input-text input {
+  @apply bg-white border-slate-800 border-2 px-2 py-1 rounded outline-0 hover:border-[var(--theme-color)] focus:border-[var(--theme-color)] transition-all duration-300;
+}
+
+.property-filter-btn {
+  @apply px-4 py-2 uppercase rounded-md font-bold bg-[var(--theme-color)] text-white opacity-90 shadow hover:opacity-100 transition-opacity duration-300 hover:shadow-md;
 }

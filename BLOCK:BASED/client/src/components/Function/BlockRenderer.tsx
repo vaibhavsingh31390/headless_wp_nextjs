@@ -7,18 +7,43 @@ import Columns from "./Columns";
 import Column from "./Column";
 import ImageRender from "./Image";
 import Container from "./Container";
+import PropertySearch from "./PropertySearch";
+import React from "react";
+
+const PARENT_LEVEL_EXCEPTIONS = ["core/cover"];
+
+const ColumnWrapper = ({
+  id,
+  isParent,
+  children,
+}: {
+  id?: string;
+  isParent?: boolean;
+  children?: React.ReactNode;
+}) =>
+  isParent ? (
+    <Column key={id} width="100%">
+      {children}
+    </Column>
+  ) : (
+    <React.Fragment key={id}>{children}</React.Fragment>
+  );
 
 function BlockRenderer({
   blocks,
-  container,
+  isParent = true,
+  searchParams = {},
 }: {
   blocks: Block[];
-  container: boolean;
+  isParent?: boolean;
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  if (blocks?.length === 0) return null;
+  if (!blocks?.length) return null;
+
   return blocks.map((block) => {
-    const blockComponent = (() => {
+    const getBlockComponent = () => {
       switch (block.name) {
+        case "core/post-title":
         case "core/heading":
           return <Heading key={block.id} data={block.attributes} />;
         case "core/paragraph":
@@ -26,18 +51,13 @@ function BlockRenderer({
         case "core/cover":
           return (
             <Cover key={block.id} data={block.attributes}>
-              {block.innerBlocks && (
-                <BlockRenderer
-                  container={container}
-                  blocks={block.innerBlocks}
-                />
-              )}
+              <BlockRenderer blocks={block.innerBlocks} isParent={false} />
             </Cover>
           );
         case "acf/ctabutton":
           return (
             <CtaButton
-              className="mt-12"
+              className="pt-10 pb-10"
               key={block.id}
               ctaData={block.attributes.data}
             />
@@ -48,12 +68,7 @@ function BlockRenderer({
               key={block.id}
               isStackedOnMobile={block.attributes.isStackedOnMobile || false}
             >
-              {block.innerBlocks && (
-                <BlockRenderer
-                  container={container}
-                  blocks={block.innerBlocks}
-                />
-              )}
+              <BlockRenderer blocks={block.innerBlocks} isParent={false} />
             </Columns>
           );
         case "core/column":
@@ -64,12 +79,7 @@ function BlockRenderer({
                 block.attributes?.width ? `${block.attributes.width}%` : "50%"
               }
             >
-              {block.innerBlocks && (
-                <BlockRenderer
-                  container={container}
-                  blocks={block.innerBlocks}
-                />
-              )}
+              <BlockRenderer blocks={block.innerBlocks} isParent={false} />
             </Column>
           );
         case "core/image":
@@ -80,12 +90,27 @@ function BlockRenderer({
               className=""
             />
           );
+        case "core/group":
+        case "core/block":
+          return (
+            <ColumnWrapper key={block.id} isParent={isParent}>
+              <BlockRenderer blocks={block.innerBlocks} isParent={false} />
+            </ColumnWrapper>
+          );
+        case "acf/propertysearch":
+          return (
+            <ColumnWrapper key={block.id} isParent={isParent}>
+              <PropertySearch searchParams={searchParams} />
+            </ColumnWrapper>
+          );
         default:
           return null;
       }
-    })();
+    };
 
-    return container ? (
+    const blockComponent = getBlockComponent();
+
+    return isParent && !PARENT_LEVEL_EXCEPTIONS.includes(block.name) ? (
       <Container key={block.id}>{blockComponent}</Container>
     ) : (
       blockComponent

@@ -4,6 +4,9 @@ import { allPagesSlug, pageQuery, processJsonForBlocks } from "@/utils/helpers";
 import { NodeByUri } from "@/utils/types";
 import { notFound } from "next/navigation";
 
+// export const dynamic = "force-dynamic";
+export const revalidate = 60;
+export const dynamicParams = false;
 export async function generateStaticParams() {
   const data = await requestGraphQl<{
     pages: {
@@ -12,8 +15,15 @@ export async function generateStaticParams() {
         uri: string;
       }>;
     };
+    properties: {
+      nodes: Array<{
+        slug: string;
+        uri: string;
+      }>;
+    };
   }>(allPagesSlug());
-  return data.pages.nodes
+
+  return [...data.pages.nodes, ...data.properties.nodes]
     .filter((page) => page.uri !== "/")
     .map((page) => {
       const slugSegments = page.uri
@@ -23,26 +33,25 @@ export async function generateStaticParams() {
     });
 }
 
-export const dynamicParams = true;
-export const revalidate = 60;
-
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string[] }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const { slug } = await params;
   const path = slug?.join("/") || "home";
   const data = await requestGraphQl<{
     nodeByUri: NodeByUri;
   }>(pageQuery(), { variables: { url: path } });
-
   if (!data.nodeByUri) return notFound();
 
   return (
     <BlockRenderer
       container={data.nodeByUri?.container?.container || false}
       blocks={processJsonForBlocks(data.nodeByUri.blocks)}
+      searchParams={searchParams}
     />
   );
 }
