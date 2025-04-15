@@ -1,5 +1,3 @@
-import Container from "./Container";
-
 function Columns({
   isStackedOnMobile,
   children,

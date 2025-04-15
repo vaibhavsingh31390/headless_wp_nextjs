@@ -49,7 +49,6 @@ export default async function Page({
 
   return (
     <BlockRenderer
-      container={data.nodeByUri?.container?.container || false}
       blocks={processJsonForBlocks(data.nodeByUri.blocks)}
       searchParams={searchParams}
     />

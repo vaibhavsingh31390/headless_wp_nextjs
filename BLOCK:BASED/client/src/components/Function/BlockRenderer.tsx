@@ -1,33 +1,24 @@
 import { Block } from "@/utils/types";
-import Heading from "./Heading";
-import Paragraph from "./Paragraph";
-import Cover from "./Cover";
-import CtaButton from "./CtaButton";
-import Columns from "./Columns";
-import Column from "./Column";
-import ImageRender from "./Image";
-import Container from "./Container";
-import PropertySearch from "./PropertySearch";
 import React from "react";
+import {
+  Heading,
+  Paragraph,
+  Cover,
+  CtaButton,
+  Columns,
+  Column,
+  ImageRender,
+  Container,
+  PropertySearch,
+} from "./index";
+import { ColumnWrapper } from "@/utils/helpers";
 
 const PARENT_LEVEL_EXCEPTIONS = ["core/cover"];
-
-const ColumnWrapper = ({
-  id,
-  isParent,
-  children,
-}: {
-  id?: string;
-  isParent?: boolean;
-  children?: React.ReactNode;
-}) =>
-  isParent ? (
-    <Column key={id} width="100%">
-      {children}
-    </Column>
-  ) : (
-    <React.Fragment key={id}>{children}</React.Fragment>
-  );
+const BLOCK_PADDING_MAP: Record<string, string | undefined> = {
+  "core/columns": "container-padding-md",
+  "core/group": "container-padding-sm",
+  "acf/propertysearch": "container-padding-md",
+};
 
 function BlockRenderer({
   blocks,
@@ -57,7 +48,7 @@ function BlockRenderer({
         case "acf/ctabutton":
           return (
             <CtaButton
-              className="pt-10 pb-10"
+              className="mt-5 md:mt-6"
               key={block.id}
               ctaData={block.attributes.data}
             />
@@ -111,7 +102,13 @@ function BlockRenderer({
     const blockComponent = getBlockComponent();
 
     return isParent && !PARENT_LEVEL_EXCEPTIONS.includes(block.name) ? (
-      <Container key={block.id}>{blockComponent}</Container>
+      <Container
+        key={block.id}
+        defaultPadding
+        className={BLOCK_PADDING_MAP[block.name]}
+      >
+        {blockComponent}
+      </Container>
     ) : (
       blockComponent
     );

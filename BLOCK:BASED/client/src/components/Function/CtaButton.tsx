@@ -22,7 +22,7 @@ function CtaButton({
     <div className={`${alignMap[alignment]} ${className || ""}`}>
       <Link
         href={getRelativePath(ctaData?.destination) || "/"}
-        className="px-7 py-3 uppercase rounded-md font-bold button-with-transition-2"
+        className="px-7 py-3 uppercase rounded-md font-bold button-with-transition-2 inline-block"
       >
         {ctaData?.label || ""}
       </Link>

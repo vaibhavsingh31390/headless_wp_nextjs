@@ -27,7 +27,7 @@ function Header({ menuData }: { menuData: MainMenu }) {
 
           <nav
             aria-label="Main navigation"
-            className="h-full flex justify-end items-center"
+            className="h-full hidden justify-end items-center md:flex"
           >
             <ul className="flex items-center h-full">
               {menu_items.length > 0 &&

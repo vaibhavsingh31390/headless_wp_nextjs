@@ -40,15 +40,42 @@ export type PropertyResponseData = {
   data?: PropertyAttrs;
   error?: any;
 };
-
 const DEFAULT_SIZE = 3;
 
+interface FilterParams {
+  offset: number;
+  parking: boolean;
+  pets: boolean;
+  min_price: number | null;
+  max_price: number | null;
+}
+
+const extractFilters = (params: URLSearchParams): FilterParams => {
+  const pageParam = parseInt(params.get("page") || "1", 10);
+  const offset = (pageParam - 1) * DEFAULT_SIZE;
+
+  const getBooleanParam = (param: string): boolean => {
+    const value = params.get(param);
+    return value !== null ? Boolean(parseInt(value)) : false;
+  };
+
+  const getNumericParam = (param: string): number | null => {
+    const value = params.get(param);
+    return value !== null ? parseInt(value) : null;
+  };
+
+  return {
+    offset,
+    parking: getBooleanParam("parking"),
+    pets: getBooleanParam("pets"),
+    min_price: getNumericParam("min_price"),
+    max_price: getNumericParam("max_price"),
+  };
+};
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req?.nextUrl?.searchParams;
-    const pageParam = parseInt(searchParams.get("page") || "1", 10);
-    const offset = (pageParam - 1) * DEFAULT_SIZE;
-
+    const filters = extractFilters(searchParams);
     const data = await requestGraphQl<{
       properties: {
         nodes: PropertyAttrs["properties"];
@@ -60,8 +87,17 @@ export async function GET(req: NextRequest) {
           };
         };
       };
-    }>(propertySearchQuery(offset, DEFAULT_SIZE));
-    const currentPage = Math.floor(offset / DEFAULT_SIZE) + 1;
+    }>(
+      propertySearchQuery(
+        filters.offset,
+        DEFAULT_SIZE,
+        filters.parking,
+        filters.pets,
+        filters.min_price,
+        filters.max_price
+      )
+    );
+    const currentPage = Math.floor(filters.offset / DEFAULT_SIZE) + 1;
     const totalPages = Math.ceil(
       data.properties.pageInfo.offsetPagination.total / DEFAULT_SIZE
     );
